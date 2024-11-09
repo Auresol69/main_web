@@ -23,6 +23,7 @@ function Transaction__payment() {
         cart: cart,
     };
     ArrayBill.push(Bill);
+    // ArrayBill = [];
     localStorage.setItem('ArrayBill', JSON.stringify(ArrayBill));
 
     ArrayBill = JSON.parse(localStorage.getItem("ArrayBill")) || [];
@@ -284,16 +285,22 @@ function Transaction__payment() {
         }
 
         const locatDelivery = document.getElementById('location');
-        if (locatDelivery && locatDelivery.value === '') {
-            document.getElementById('error-locat-delivery').innerText = 'Location delivery is required';
-            document.getElementById('error-locat-delivery').style.display = 'block';
-            return false;
+        const addressRegex = /[0-9]+.*(đường|phố|phường|xã|quận|huyện|thị xã|thành phố|tỉnh|việt nam)/i;
+
+        if (locatDelivery) {
+            if (locatDelivery.value === '') {
+                document.getElementById('error-locat-delivery').innerText = 'Location delivery is required';
+                document.getElementById('error-locat-delivery').style.display = 'block';
+                return false;
+            } else if (!addressRegex.test(locatDelivery.value)) {
+                document.getElementById('error-locat-delivery').innerText = 'Invalid address format';
+                document.getElementById('error-locat-delivery').style.display = 'block';
+                return false;
+            } else {
+                document.getElementById('error-locat-delivery').style.display = 'none';
+            }
         }
 
-        else if (locatDelivery) {
-            document.getElementById('error-locat-delivery').style.display = 'none';
-            return true;
-        }
         switch (currentMethod) {
             case 'Momo':
                 const momoPhone = document.getElementById('momo_phone');
@@ -356,7 +363,7 @@ function Transaction__payment() {
                     document.getElementById('error-atm_cvc').style.display = 'none';
                 }
 
-                if (atmPhone && atmPhone.value === '' || atmPhone.value.length !== 10) {
+                if (atmPhone && (atmPhone.value === '' || atmPhone.value.length !== 10)) {
                     document.getElementById('error-atm_phone').innerText = 'Vietnamese phone numbers need 10 digits';
                     document.getElementById('error-atm_phone').style.display = 'block';
                     isValid = false;
@@ -384,7 +391,7 @@ function Transaction__payment() {
                 const cashPhone = document.getElementById('cash_phone');
                 const cashName = document.getElementById('cash_name');
 
-                if (cashPhone && cashPhone.value === '' || cashPhone.value.length !== 10) {
+                if (cashPhone && (cashPhone.value === '' || cashPhone.value.length !== 10)) {
                     document.getElementById('error-cash_phone').innerText = 'Vietnamese phone numbers need 10 digits';
                     document.getElementById('error-cash_phone').style.display = 'block';
                     isValid = false;
