@@ -35,28 +35,10 @@ function loadMenuCart() {
 }
 
 function pay() {
-  let cart = JSON.parse(localStorage.getItem("gioHang")) || [];
   if (localStorage.getItem("userLogin")) {
-    if (!cart || cart.length === 0) {
-      // Kiểm tra giỏ hàng có sản phẩm hay không
-      noti("Không có sản phẩm trong giỏ hàng", 1);
-      return;
-    }
     const case__payment = document.getElementById("case__payment");
     case__payment.style.display = "block";
-    // userLogin = JSON.parse(localStorage.getItem("userLogin"));
-    // let Bill = {
-    //   username: userLogin.username,
-    //   address: userLogin.address,
-    //   phone: userLogin.sdt,
-    //   status: "chưa xử lý",
-    //   date: new Date().toDateString(),
-    //   cart: cart,
-    // };
-    // ArrayBill.push(Bill);
     Transaction__payment();
-    // localStorage.setItem("ArrayBill", JSON.stringify(ArrayBill));
-    localStorage.removeItem("gioHang");
     noti("dat hang thanh cong", 0);
     showCart();
   } else {
@@ -101,6 +83,7 @@ function quantityDown(x) {
       break;
     }
   }
+  localStorage.setItem("gioHang", JSON.stringify(gioHang));
   x.parentNode.children[2].value = soluongNew;
   x.parentNode.parentNode.children[4].innerText = sumP.toLocaleString();
   totalPrice();
